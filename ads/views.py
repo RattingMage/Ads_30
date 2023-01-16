@@ -7,7 +7,7 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView
 
-from ads.models import Ads, Categories
+from ads.models import Ads, Category
 
 
 def index(request):
@@ -75,7 +75,7 @@ class AdsDetailView(DetailView):
 @method_decorator(csrf_exempt, name="dispatch")
 class CatView(View):
     def get(self, request):
-        cats = Categories.objects.all()
+        cats = Category.objects.all()
         response = []
         for cat in cats:
             response.append({
@@ -88,7 +88,7 @@ class CatView(View):
     def post(self, request):
         cat_data = json.loads(request.body)
 
-        cat = Categories()
+        cat = Category()
         cat.name = cat_data["name"]
         cat.save()
 
@@ -99,7 +99,7 @@ class CatView(View):
 
 
 class CatDetailView(DetailView):
-    model = Categories
+    model = Category
 
     def get(self, request, *args, **kwargs):
         cat = self.get_object()

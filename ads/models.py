@@ -9,7 +9,7 @@ class Category(models.Model):
 
 
 # Id,name,author_id,price,description,is_published,image,category_id
-class Ads(models.Model):
+class Ad(models.Model):
     IS_PUB = [
         (True, "Опубликовано"),
         (False, "Не опубликовано")

@@ -22,5 +22,22 @@ class Ad(models.Model):
     image = models.ImageField(upload_to="data/img", null=True, blank=True)
     author = models.ForeignKey("users.User", on_delete=models.CASCADE)
 
+    class Meta:
+        verbose_name = "Объявление"
+        verbose_name_plural = "Объявления"
+
+    def __str__(self):
+        return self.name
+
+
+class Selection(models.Model):
+    name = models.CharField(max_length=150)
+    owner = models.ForeignKey("users.User", on_delete=models.CASCADE)
+    items = models.ManyToManyField(Ad)
+
+    class Meta:
+        verbose_name = "Подборка"
+        verbose_name_plural = "Подборки"
+
     def __str__(self):
         return self.name

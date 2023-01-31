@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import AbstractUser
 
 
 # id,name,lat,lng
@@ -23,14 +24,14 @@ class UserRoles(models.TextChoices):
 
 
 # id,first_name,last_name,username,password,role,age,location_id
-class User(models.Model):
-    first_name = models.CharField(max_length=20)
-    last_name = models.CharField(max_length=20)
-    username = models.CharField(max_length=100, unique=True)
-    password = models.CharField(max_length=100)
+class User(AbstractUser):
     role = models.CharField(choices=UserRoles.choices, max_length=9)
-    age = models.PositiveSmallIntegerField()
+    age = models.PositiveSmallIntegerField(null=True)
     location = models.ManyToManyField(Location)
+    
+    def save(self, *args, **kwargs):
+        self.set_password(self.password)
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return self.username

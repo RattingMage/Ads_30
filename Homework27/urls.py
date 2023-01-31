@@ -16,9 +16,11 @@ Including another URLconf
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework.routers import SimpleRouter
 
 import ads.views.cat
 from Homework27 import settings
+from ads.views.selection import SelectionViewSet
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,6 +29,11 @@ urlpatterns = [
     path('ad/', include("ads.urls.ad")),
     path('user/', include("users.urls")),
 ]
+
+router = SimpleRouter()
+router.register("selection", SelectionViewSet)
+urlpatterns += router.urls
+
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -4,6 +4,8 @@ from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet
 
 from ads.models import Ad, Category
@@ -14,6 +16,9 @@ class CategoryViewSet(ModelViewSet):
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
 
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
 def index(request):
     return JsonResponse({"status": "ok"}, status=200, safe=True)
 

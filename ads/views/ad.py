@@ -3,9 +3,11 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import UpdateView
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.viewsets import ModelViewSet
 
 from ads.models import Ad
+from ads.permissions import IsAdOwnerOrAdmin
 from ads.serializers import AdSerializer, AdDetailSerializer, AdListSerializer
 
 
@@ -20,10 +22,22 @@ class AdViewSet(ModelViewSet):
         "retrieve": AdDetailSerializer,
         "list": AdListSerializer
     }
+
+    default_permission = [AllowAny()]
+    permission_list = {
+        "retrieve": [IsAuthenticated()],
+        "update": [IsAuthenticated(), IsAdOwnerOrAdmin()],
+        "partial_update": [IsAuthenticated(), IsAdOwnerOrAdmin()],
+        "destroy": [IsAuthenticated(), IsAdOwnerOrAdmin()]
+    }
+
     pagination_class = AdPagination
 
     def get_serializer_class(self):
         return self.serializer_classes.get(self.action, self.default_serializer)
+
+    def get_permissions(self):
+        return self.permission_list.get(self.action, self.default_permission)
 
     def list(self, request, *args, **kwargs):
         categories = request.GET.getlist("cat", None)
